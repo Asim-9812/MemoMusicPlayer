@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:musicplayer/src/music_player/presentation/music_player.dart';
 
-import '../dashboard/presentation/main_page.dart';
 
 
 
@@ -30,7 +30,7 @@ class MyAppState extends State<MyApp> {
           home: child,
         );
       },
-      child: MainPage(),
+      child: const MusicPlayer(),
     );
   }
 }

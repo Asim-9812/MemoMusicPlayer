@@ -56,8 +56,19 @@ class _UploadMusicState extends ConsumerState<UploadMusic> {
   }
 
   void _uploadSong(File song) async {
+
     
     final response = await ref.read(uploadProvider).uploadSong(name: _nameController.text.trim(), song: song);
+
+    Fluttertoast.showToast(
+        msg: "Please Wait...",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.white,
+        textColor: Colors.black,
+        fontSize: 16.0
+    );
 
     if(response.isLeft()){
       final left = response.fold(
@@ -88,6 +99,7 @@ class _UploadMusicState extends ConsumerState<UploadMusic> {
       );
       setState(() {
         isPostingData = false;
+        _nameController.clear();
       });
     }
     
@@ -98,10 +110,19 @@ class _UploadMusicState extends ConsumerState<UploadMusic> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap:()=> FocusScope.of(context).unfocus(),
-      child: Form(
-        key: _formKey,
-        child: Container(
-          color: Colors.white,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          automaticallyImplyLeading: true,
+          iconTheme: IconThemeData(
+            color: Colors.black
+          ),
+          title: Text('Upload a Music',style: TextStyle(color: Colors.black),),
+        ),
+        backgroundColor: Colors.white,
+        body: Form(
+          key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -126,17 +147,17 @@ class _UploadMusicState extends ConsumerState<UploadMusic> {
                 child: TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.black.withOpacity(0.1),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        style: BorderStyle.solid,
-                        color: Colors.black.withOpacity(0.5),
+                      filled: true,
+                      fillColor: Colors.black.withOpacity(0.1),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            style: BorderStyle.solid,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                          borderRadius: BorderRadius.circular(10)
                       ),
-                      borderRadius: BorderRadius.circular(10)
-                    ),
-                    hintText: 'Add a name',
-                    hintStyle: const TextStyle(color: Colors.black)
+                      hintText: 'Add a name',
+                      hintStyle: const TextStyle(color: Colors.black)
                   ),
                   style:const TextStyle(color: Colors.black),
                   validator: (value){
@@ -162,12 +183,16 @@ class _UploadMusicState extends ConsumerState<UploadMusic> {
                       _selectSong();
                     }
                   },
-                  child: isPostingData?const CircularProgressIndicator(color: Colors.white,):const Text('Select a file')
+                  child: isPostingData?Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: const CircularProgressIndicator(color: Colors.white,),
+                  ):const Text('Select a file')
               )
 
             ],
-          ),
+          )
         ),
+
       ),
     );
   }
